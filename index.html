@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Betscope – Football Analysis & Predictions</title>
+<meta name="description" content="Betscope provides data-driven football predictions, match insights, and expert analysis." />
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary-yellow: #FFD700;
+  --secondary-green: #28A745;
+  --bg-dark: #121212;
+  --text-light: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+body { background: var(--bg-dark); color: var(--text-light); }
+
+/* HEADER */
+header { background: var(--secondary-green); padding: 35px 0; text-align: center; margin-bottom: 50px; }
+header h1 { font-family: 'Bebas Neue', cursive; font-size: 2.5rem; color: var(--primary-yellow); letter-spacing: 2px; }
+
+/* HERO */
+.hero { background: linear-gradient(to right, var(--primary-yellow), var(--secondary-green)); color: #111; padding: 110px 20px; text-align: center; margin-bottom: 60px; }
+.hero h2 { font-size: 3rem; margin-bottom: 15px; }
+
+/* MISSION & VISION */
+#mission-vision { background: linear-gradient(135deg, var(--primary-yellow), var(--secondary-green)); color: #111; border-radius: 15px; text-align: center; margin: 60px 20px; padding: 50px 20px; }
+#mission-vision .block { max-width: 900px; margin: 20px auto; font-size: 1.15rem; line-height: 1.8; background: rgba(255,255,255,0.1); padding: 20px 25px; border-radius: 10px; text-align: justify; }
+
+/* MATCH TABLE */
+.matches { max-width: 1200px; margin: 80px auto 40px; padding: 20px; }
+.matches h2 { text-align: center; color: var(--primary-yellow); margin-bottom: 25px; font-size: 2rem; }
+
+table { width: 100%; border-collapse: collapse; background: #1c1c1c; }
+th, td { padding: 14px; border-bottom: 1px solid #333; text-align: center; }
+th { background: var(--secondary-green); }
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  thead tr { display: none; }
+  tr { margin-bottom: 15px; border-bottom: 2px solid #333; }
+  td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: 45%;
+    text-align: left;
+    font-weight: bold;
+  }
+  td button { margin-top: 5px; width: 48%; font-size: 0.9rem; padding: 6px 0; }
+}
+
+/* FOLLOW US */
+section.follow { max-width: 1200px; margin: auto; padding: 70px 20px; text-align: center; }
+section.follow h2 { color: var(--primary-yellow); margin-bottom: 40px; font-size: 2rem; }
+.links { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.link-btn { padding: 20px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 10px; text-decoration: none; color: #111; transition: transform 0.2s; }
+.link-btn.telegram { background: var(--primary-yellow); }
+.link-btn.tiktok { background: #25F4EE; }
+.link-btn:hover { transform: scale(1.1); }
+
+/* ADMIN */
+.admin-btn { position: fixed; top: 20px; right: 20px; background: var(--primary-yellow); color: #111; padding: 10px 15px; font-weight: bold; border-radius: 8px; cursor: pointer; z-index: 1000; }
+.admin-panel { display: none; position: fixed; top: 70px; right: 20px; width: 320px; background: #1c1c1c; padding: 20px; border-radius: 10px; z-index: 1000; }
+.admin-panel input, .admin-panel button { width: 100%; margin-bottom: 10px; padding: 10px; }
+.admin-panel button { background: var(--secondary-green); color: white; border: none; cursor: pointer; }
+.lock-btn { background: #b03030; }
+
+/* FOOTER */
+footer { background: var(--secondary-green); text-align: center; padding: 25px; font-weight: bold; margin-top: 60px; }
+</style>
+</head>
+
+<body>
+
+<div class="admin-btn" onclick="toggleAdmin()">Admin</div>
+
+<div class="admin-panel" id="adminPanel">
+  <div id="loginBox">
+    <input type="password" id="adminPass" placeholder="Admin password">
+    <button onclick="loginAdmin()">Unlock</button>
+  </div>
+
+  <div id="adminControls" style="display:none;">
+    <input id="teams" placeholder="Match (Team A vs Team B)">
+    <input id="prediction" placeholder="Prediction">
+    <input id="confidence" placeholder="Confidence %">
+    <button onclick="saveMatch()">Save</button>
+    <button class="lock-btn" onclick="lockAdmin()">Lock</button>
+  </div>
+</div>
+
+<header>
+  <h1>BETSCOPE FOOTBALL ANALYSIS</h1>
+</header>
+
+<section class="hero">
+  <h2>Your Ultimate Football Prediction Platform</h2>
+  <p>Accurate football insights, confidence ratings, and professional match analysis.</p>
+</section>
+
+<section id="mission-vision">
+  <h2>Our Mission & Vision</h2>
+  <div class="block">
+    <strong>Mission:</strong> Our mission is to provide football enthusiasts with the most accurate, insightful, and actionable match predictions. We combine advanced statistical models, expert analysis, and real-time data to ensure every prediction is reliable.
+  </div>
+  <div class="block">
+    <strong>Vision:</strong> Our vision is to become the leading platform for football analysis and predictions worldwide, building a trusted community that relies on Betscope for informed decisions.
+  </div>
+</section>
+
+<section class="matches">
+  <h2>Upcoming Match Predictions</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Match</th>
+        <th>Prediction</th>
+        <th>Confidence</th>
+        <th id="adminCol" style="display:none;">Admin</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</section>
+
+<section class="follow">
+  <h2>Follow Us</h2>
+  <div class="links">
+    <a href="https://t.me/+JOjmhq-dUSNlNjc0" target="_blank" class="link-btn telegram">Join Telegram</a>
+    <a href="https://www.tiktok.com/@betscope7" target="_blank" class="link-btn tiktok">Follow TikTok</a>
+  </div>
+</section>
+
+<footer>
+© <span id="year"></span> Betscope
+</footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+let isAdmin = false;
+
+function toggleAdmin() {
+  const adminPanel = document.getElementById("adminPanel");
+  adminPanel.style.display = adminPanel.style.display === "block" ? "none" : "block";
+}
+
+function loginAdmin() {
+  const pass = document.getElementById("adminPass").value;
+  if(pass === "scope1945") {
+    isAdmin = true;
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("adminControls").style.display = "block";
+    document.getElementById("adminCol").style.display = "";
+    renderMatches();
+  } else alert("Wrong password");
+}
+
+function lockAdmin() {
+  isAdmin = false;
+  document.getElementById("adminPass").value = "";
+  document.getElementById("loginBox").style.display = "block";
+  document.getElementById("adminControls").style.display = "none";
+  document.getElementById("adminCol").style.display = "none";
+  renderMatches();
+}
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBvkZA3SPZzE_9ZkCQbD5ygVnGdvFNivwQ",
+  authDomain: "betscope-e51e1.firebaseapp.com",
+  projectId: "betscope-e51e1",
+  storageBucket: "betscope-e51e1.appspot.com",
+  messagingSenderId: "782849960535",
+  appId: "1:782849960535:web:c2f7e52dd5fbffa89b5112",
+  measurementId: "G-S10511E4VW"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const tableBody = document.getElementById("tableBody");
+const teamsInput = document.getElementById("teams");
+const predictionInput = document.getElementById("prediction");
+const confidenceInput = document.getElementById("confidence");
+
+const predictionsRef = collection(db, "predictions");
+const q = query(predictionsRef, orderBy("timestamp", "desc"));
+
+let editId = null;
+
+// Render all matches (public & admin)
+async function renderMatches() {
+  tableBody.innerHTML = "";
+  const snapshot = await getDocs(q);
+  snapshot.forEach(docSnap => {
+    const m = docSnap.data();
+    const id = docSnap.id;
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td data-label="Match">${m.teams}</td>
+      <td data-label="Prediction">${m.prediction}</td>
+      <td data-label="Confidence">${m.confidence}</td>
+      <td data-label="Admin">${isAdmin ? `<button onclick="editMatch('${id}')">Edit</button>
+        <button onclick="deleteMatch('${id}')">Delete</button>` : ""}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+
+// Real-time updates for all users
+onSnapshot(q, () => renderMatches());
+
+// Save or update match (admin only)
+window.saveMatch = async () => {
+  if(!teamsInput.value || !predictionInput.value || !confidenceInput.value) return;
+  if(editId) {
+    await updateDoc(doc(db, "predictions", editId), {
+      teams: teamsInput.value,
+      prediction: predictionInput.value,
+      confidence: confidenceInput.value
+    });
+    editId = null;
+  } else {
+    await addDoc(predictionsRef, {
+      teams: teamsInput.value,
+      prediction: predictionInput.value,
+      confidence: confidenceInput.value,
+      timestamp: Date.now()
+    });
+  }
+  teamsInput.value = predictionInput.value = confidenceInput.value = "";
+  renderMatches();
+};
+
+// Delete match (admin only)
+window.deleteMatch = async (id) => {
+  if(!isAdmin) return;
+  if(confirm("Delete this prediction?")) {
+    await deleteDoc(doc(db, "predictions", id));
+  }
+};
+
+// Edit match (admin only)
+window.editMatch = async (id) => {
+  if(!isAdmin) return;
+  const data = (await getDoc(doc(db, "predictions", id))).data();
+  teamsInput.value = data.teams;
+  predictionInput.value = data.prediction;
+  confidenceInput.value = data.confidence;
+  editId = id;
+};
+
+// Load matches on page load
+document.addEventListener("DOMContentLoaded", renderMatches);
+</script>
+
+</body>
+</html>
